@@ -1,0 +1,37 @@
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from urllib.request import urlopen
+
+%matplotlib inline
+
+data_url = os.getenv("DATA_URL")
+
+try:
+    if data_url:
+        df = pd.read_csv(data_url, header=None)
+        print(f"✅ Dataset loaded from URL: {data_url}")
+    else:
+
+        column_names = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class']
+        df = pd.read_csv('iris.csv', header=None, names=column_names)
+        print("⚙️ Using default iris dataset")
+except Exception as e:
+    print(f"⚠️ Failed to load dataset: {e}")
+    column_names = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class']
+    df = pd.read_csv('iris.csv', header=None, names=column_names)
+
+if df.shape[1] < 5:
+    df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class']
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='sepal_length', y='sepal_width', hue='class', data=df)
+plt.title('Sepal Length vs. Sepal Width')
+plt.xlabel('Sepal Length')
+plt.ylabel('Sepal Width')
+plt.grid(True)
+plt.show()
+
+plt.savefig('chart.png')
+print("Chart saved as chart.png")
