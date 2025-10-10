@@ -3,14 +3,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from urllib.request import urlopen
+from dotenv import load_dotenv
 
-%matplotlib inline
+# %matplotlib inline
+
+load_dotenv()
 
 data_url = os.getenv("DATA_URL")
 
+print("DATA_URL")
+print(data_url)
+print("DATA_URL")
+
+
 try:
     if data_url:
-        df = pd.read_csv(data_url, header=None)
+        df = pd.read_csv(data_url, header=None, names=column_names)
         print(f"✅ Dataset loaded from URL: {data_url}")
     else:
 
