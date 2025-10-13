@@ -26,12 +26,6 @@ try:
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    # Save the chart to a file
-    plt.savefig('establishments_chart.png')
-    print("✅ Chart saved to establishments_chart.png")
-
-    # Display the chart
     plt.show()
-
 except Exception as e:
     print(f"⚠️ Failed to load or process dataset: {e}")
