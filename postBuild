@@ -2,3 +2,4 @@
 wget -O iris.csv https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
 wget -O 1.csv https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/1.csv
 wget -O 2.csv https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/2.csv
+wget -O 3.csv https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/3.csv
