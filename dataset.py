@@ -3,9 +3,9 @@ import requests
 import io
 
 
-DATASET_ID=3    #here put dataset ID
+DATASET_ID="PASTE_DATASET_ID_HERE" # 1,2 or 3
+DATASET_URl="https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/" + str(DATASET_ID) +  ".csv"
 
-DATASET_URl="https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/" + DATASET_ID +  ".csv"
 
 def render_csv_from_url(url):
     try:
