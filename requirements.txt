@@ -3,3 +3,4 @@ matplotlib
 seaborn
 notebook
 python-dotenv
+requests
