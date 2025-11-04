@@ -4,3 +4,4 @@ seaborn
 notebook
 python-dotenv
 requests
+plotly
