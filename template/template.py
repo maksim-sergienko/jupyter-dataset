@@ -3,12 +3,9 @@ import requests
 import io
 import plotly.express as px
 
+DATASET_URl="https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/{{DATASET_ID}}.csv"
 
 print("Notebook for: {{DATASET_NAME}} ({{DATASET_ID}})")
-print("Description: {{DESCRIPTION}}")
-
-DATASET_URl="{{DATASET_URL}}"
-
 
 def render_csv_from_url(url, x_col=None, y_col=None):
     try:
