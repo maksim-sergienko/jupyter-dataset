@@ -9,7 +9,7 @@ import requests
 import nbformat
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
 
-DATASETS_URL = "https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/dataset-list.json"
+DATASETS_URL = "https://n8n.msergienko.com/webhook/datasets"
 TEMPLATE_PATH = "template/template.py"
 OUT_DIR = "notebooks"
 FILENAME_FORMAT = "{slug}.ipynb"
@@ -101,23 +101,19 @@ def main():
 
     changed_files = []
     for ds in data:
-        ds_id = ds.get("id") or ds.get("name") or ds.get("url")
-        ds_name = ds.get("name") or ds_id
-        ds_url = ds.get("url") or ""
-        ds_desc = ds.get("description") or ""
-        slug = slugify(ds_id)
+        ds_id = ds.get("id")
+        ds_name = ds.get("Name")
+        slug = ds_id
 
         context = {
             "DATASET_ID": ds_id,
             "DATASET_NAME": ds_name,
-            "DATASET_URL": ds_url,
-            "DESCRIPTION": ds_desc
         }
 
         rendered_code = render_template(template, context)
 
         code_cells = [rendered_code]
-        md_cells = [f"# Notebook: {ds_name}\n\nSource: {ds_url}\n\n{ds_desc}"]
+        md_cells = [f"# Notebook: {ds_name}"]
 
         nb = notebook_from_code_cells(code_cells, md_cells)
         nb_text = nbformat.writes(nb)
