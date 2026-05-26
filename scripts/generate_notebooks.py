@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import requests
 import nbformat
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
+from generate_readme import DEFAULT_BRANCH, DEFAULT_REPOSITORY, README_PATH, render_readme
 
 DATASETS_URL = "https://n8n.msergienko.com/webhook/datasets"
 TEMPLATE_PATH = "template/template.py"
@@ -44,10 +45,14 @@ def notebook_from_code_cells(code_cells, md_cells=None):
     nb = new_notebook()
     cells = []
     if md_cells:
-        for md in md_cells:
-            cells.append(new_markdown_cell(md))
-    for c in code_cells:
-        cells.append(new_code_cell(c))
+        for index, md in enumerate(md_cells):
+            cell = new_markdown_cell(md)
+            cell["id"] = sha256_text(f"markdown:{index}:{md}")[:8]
+            cells.append(cell)
+    for index, c in enumerate(code_cells):
+        cell = new_code_cell(c)
+        cell["id"] = sha256_text(f"code:{index}:{c}")[:8]
+        cells.append(cell)
     nb['cells'] = cells
     nb['metadata'] = {
         "kernelspec": {
@@ -79,11 +84,15 @@ def main():
     parser.add_argument("--datasets-url", default=DATASETS_URL, help="URL that returns JSON list of datasets")
     parser.add_argument("--template", default=TEMPLATE_PATH, help="Path to template .py")
     parser.add_argument("--out", default=OUT_DIR, help="Output notebooks dir")
+    parser.add_argument("--readme", default=README_PATH, help="Path to generated README.md")
+    parser.add_argument("--repository", default=os.environ.get("GITHUB_REPOSITORY", DEFAULT_REPOSITORY), help="GitHub repository in owner/name format")
+    parser.add_argument("--branch", default=os.environ.get("GITHUB_REF_NAME", DEFAULT_BRANCH), help="GitHub branch for notebook links")
     args = parser.parse_args()
 
     datasets_url = args.datasets_url
     template_path = args.template
     out_dir = args.out
+    readme_path = args.readme
 
     print("Fetching datasets list from:", datasets_url)
     try:
@@ -100,6 +109,7 @@ def main():
     ensure_out_dir(out_dir)
 
     changed_files = []
+    generated_notebooks = []
     for ds in data:
         ds_id = ds.get("id")
         ds_name = ds.get("Name")
@@ -120,12 +130,24 @@ def main():
 
         filename = FILENAME_FORMAT.format(slug=slug, id=ds_id)
         out_path = os.path.join(out_dir, filename)
+        notebook_path = os.path.relpath(out_path).replace(os.sep, "/")
+        generated_notebooks.append({
+            "name": ds_name or filename,
+            "path": notebook_path,
+        })
 
         if write_if_changed(out_path, nb_text):
             print("Wrote:", out_path)
             changed_files.append(out_path)
         else:
             print("No changes for:", out_path)
+
+    readme_text = render_readme(generated_notebooks, args.repository, args.branch)
+    if write_if_changed(readme_path, readme_text):
+        print("Wrote:", readme_path)
+        changed_files.append(readme_path)
+    else:
+        print("No changes for:", readme_path)
 
     print("Done. Changed files count:", len(changed_files))
     return 0

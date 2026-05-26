@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add notebooks/
+          git add notebooks/ README.md
           if ! git diff --cached --quiet; then
             git commit -m "Auto-generated notebooks [skip ci]"
             git push
