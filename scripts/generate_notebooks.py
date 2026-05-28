@@ -10,7 +10,7 @@ import nbformat
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
 from generate_readme import DEFAULT_BRANCH, DEFAULT_REPOSITORY, README_PATH, render_readme
 
-DATASETS_URL = "https://n8n.msergienko.com/webhook/datasets"
+DATASETS_URL = "https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/dataset-list.json"
 TEMPLATE_PATH = "template/template.py"
 OUT_DIR = "notebooks"
 FILENAME_FORMAT = "{slug}.ipynb"
@@ -112,18 +112,22 @@ def main():
     generated_notebooks = []
     for ds in data:
         ds_id = ds.get("id")
-        ds_name = ds.get("Name")
+        ds_name = ds.get("title") or ds.get("Name") or ds_id
+        ds_description = ds.get("description") or ""
         slug = ds_id
 
         context = {
             "DATASET_ID": ds_id,
             "DATASET_NAME": ds_name,
+            "DATASET_DESCRIPTION": ds_description,
         }
 
         rendered_code = render_template(template, context)
 
         code_cells = [rendered_code]
         md_cells = [f"# Notebook: {ds_name}"]
+        if ds_description:
+            md_cells.append(ds_description)
 
         nb = notebook_from_code_cells(code_cells, md_cells)
         nb_text = nbformat.writes(nb)

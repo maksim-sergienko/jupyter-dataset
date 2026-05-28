@@ -3,7 +3,7 @@ import requests
 import io
 import plotly.express as px
 
-DATASET_URl="https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/jupyter/{{DATASET_ID}}.csv"
+DATASET_URl="https://raw.githubusercontent.com/maksim-sergienko/data-source/refs/heads/main/datasets/{{DATASET_ID}}.csv"
 
 print("Notebook  for: {{DATASET_NAME}} ({{DATASET_ID}})")
 
