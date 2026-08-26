@@ -1,0 +1,6 @@
+name: jupyter-env
+dependencies:
+  - python
+  - pandas
+  - requests
+  - plotly
