@@ -1,6 +1,9 @@
-name: jupyter-env
+name: jupyter-dataset
+channels:
+  - https://prefix.dev/emscripten-forge-4x
+  - https://prefix.dev/conda-forge
 dependencies:
-  - python
+  - xeus-python
   - pandas
-  - requests
   - plotly
+  - requests
